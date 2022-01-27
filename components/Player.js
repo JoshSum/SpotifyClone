@@ -24,7 +24,7 @@ function Player() {
     const fetchCurrentSong = () => {
         if (_.isEmpty(songInfo)) {
             spotifyApi.getMyCurrentPlayingTrack().then(data => {
-                console.log("Now playing: " + data.body?.item);
+                console.log("Now playing: " + data.body?.item?.name);
                 setCurrentIdTrack(data.body?.item?.id);
 
                 spotifyApi.getMyCurrentPlaybackState().then((data) => {

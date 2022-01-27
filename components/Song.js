@@ -15,7 +15,7 @@ function Song({ order, track }) {
         spotifyApi.play({
             uris: [track.track.uri],
         }).catch(err => {
-            console.log(err.body.error.message);
+            // console.log(err.body.error.message);
             swal({
                 title: err.body.error.reason,
                 text: err.body.error.message,
