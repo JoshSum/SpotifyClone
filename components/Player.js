@@ -17,6 +17,9 @@ function Player() {
     const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
     const [volume, setVolume] = useState(50);
     const [toggleShuffle, setToggleShuffle] = useState(false)
+    const initialState = ["track", "context", "off"];
+    const [repeat, setRepeat] = useState(initialState[0])
+    const [roundRobin, setRoundRobin] = useState(0)
 
     const fetchCurrentSong = () => {
         if (_.isEmpty(songInfo)) {
@@ -47,10 +50,35 @@ function Player() {
         setToggleShuffle(!toggleShuffle)
         spotifyApi.setShuffle(toggleShuffle)
             .then(function () {
-                if(toggleShuffle) {
+                if (toggleShuffle) {
                     console.log('Shuffle is on.');
                 } else {
                     console.log('Shuffle is off.');
+                }
+            }, function (err) {
+                //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
+                console.log('Something went wrong!', err);
+            });
+    }
+
+    const handleRepeat = () => {
+        setRoundRobin(roundRobin + 1)
+        if (roundRobin >= 2) {
+            setRoundRobin(0)
+        }
+        spotifyApi.setRepeat(initialState[roundRobin])
+            .then(function () {
+                if (initialState[roundRobin] == 'track') {
+                    setRepeat(initialState[roundRobin])
+                    console.log('Repeat track.');
+                } else if (initialState[roundRobin] == 'context') {
+                    setRepeat(initialState[roundRobin])
+                    console.log('Repeat context.');
+                } else if (initialState[roundRobin] == 'off') {
+                    setRepeat(initialState[roundRobin])
+                    console.log('Repeat off.');
+                } else {
+                    console.log('Something went wrong!');
                 }
             }, function (err) {
                 //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
@@ -140,7 +168,7 @@ function Player() {
             {/* Center */}
             <div className="flex items-center justify-evenly">
                 <SwitchHorizontalIcon
-                    className={`button ${toggleShuffle ? ("text-white"): ("text-green-500")}`}
+                    className={`button ${toggleShuffle ? ("text-white") : ("text-green-500")}`}
                     onClick={handleShuffle}
                 />
                 <RewindIcon
@@ -164,9 +192,12 @@ function Player() {
                     onClick={() => spotifyApi.skipToNext()} //not worked
                 />
                 <ReplyIcon
-                    className="button"
-                // onClick={}
-                />
+                    className={`button ${repeat == 'track' ? ("text-green-500 ") : repeat == 'context' ? ("text-blue-500") : repeat == 'off' ? ("text-white") : ("text-white")}`}
+                    onClick={handleRepeat}
+                >
+                    <span className={`${initialState[roundRobin] == 'track' ? ("inline-block w-10 h-10 mr-2 bg-red-600 rounded-full") : ("hidden")}`}>1</span>
+                </ReplyIcon>
+                
             </div>
             {/* Right */}
             <div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
