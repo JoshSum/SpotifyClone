@@ -4,7 +4,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 This App has been deployed on Vercel
 
-View Demo [here](https://sporify.kujangsakti.com)
+View Demo [here](https://spotify.kujangsakti.com)
 
 ```if you want to use this application, contact me to add a spotify user authorization, make sure that your spotify account is PREMIUM```
 
